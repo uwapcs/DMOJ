@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: site
+  labels:
+    app: site
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: site
+  template:
+    metadata:
+      labels:
+        app: site
+    spec:
+      containers:
+        - image: asia.gcr.io/uwapcs-208404/site
+          name: site
+          ports:
+            - containerPort: 80
+              name: http
+            - containerPort: 443
+              name: https
+            - containerPort: 9999
+              name: judge
+          volumeMounts:
+            - name: problems-persistent-storage
+              mountPath: /problems
+          env:
+            - name: DJANGO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: site
+                  key: djangoSecretKey
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "sh"
+                  - "-c"
+                  - "mkdir -p /problems/pdfcache;"
+                  - "mkdir -p /problems/problems;"
+      volumes:
+        - name: problems-persistent-storage
+          persistentVolumeClaim:
+            claimName: problems

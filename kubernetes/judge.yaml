@@ -1,0 +1,47 @@
+apiVersion: apps/v1beta2
+kind: StatefulSet
+metadata:
+  name: judge
+  labels:
+    app: judge
+spec:
+  serviceName: 'judge'
+  selector:
+    matchLabels:
+      app: judge
+  template:
+    metadata:
+      labels:
+        app: judge
+    spec:
+      containers:
+        - image: asia.gcr.io/uwapcs-208404/judge
+          name: judge
+          args: ["site", "judge1", "password"]
+          env:
+          - name: PYTHON_EGG_CACHE
+            value: "/tmp/python-eggs"
+          volumeMounts:
+            - name: problems-persistent-storage
+              mountPath: /problems
+              readOnly: true
+          securityContext:
+            privileged: true
+      volumes:
+        - name: problems-persistent-storage
+          persistentVolumeClaim:
+            claimName: problems
+
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: judge-hpa
+spec:
+  maxReplicas: 2
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: judge
+  targetCPUUtilizationPercentage: 80

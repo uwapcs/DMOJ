@@ -1,0 +1,6 @@
+[submodule "docker/site"]
+	path = docker/site
+	url = https://github.com/uwapcs/DMOJ-site
+[submodule "docker/judge"]
+	path = docker/judge
+	url = https://github.com/uwapcs/DMOJ-judge

@@ -1,0 +1,47 @@
+version: '3.2'
+
+services:
+  mysql:
+    image: mysql:5.6
+    volumes:
+      - type: bind
+        source: ./volumes/mysql
+        target: /var/lib/mysql
+      - type: bind
+        source: ./mysql_dump
+        target: /docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - "MYSQL_DATABASE=dmoj"
+      - "MYSQL_USER=dmoj"
+      - "MYSQL_PASSWORD=${MYSQL_DMOJ_PASSWORD}"
+  site:
+    build: site-docker
+    volumes:
+      - type: bind
+        source: ./volumes/problems
+        target: /problems
+      - type: bind
+        source: ./volumes/certificates
+        target: /etc/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DJANGO_SECRET_KEY
+      - MYSQL_DMOJ_PASSWORD
+    depends_on:
+      - mysql
+  judge:
+    build: judge
+    command: "site judge1 password"
+    privileged: true
+    volumes:
+      - type: bind
+        source: ./volumes/problems
+        target: /problems
+        read_only: true
+    environment:
+      - "PYTHON_EGG_CACHE=/tmp/eggs"
+    depends_on:
+      - site

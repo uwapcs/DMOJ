@@ -1,0 +1,4 @@
+volumes/*
+mysql_dump/*
+!volumes/.gitkeep
+!mysql_dump/.gitkeep
