@@ -44,7 +44,8 @@ COPY config.js /site/websocket
 
 RUN apt-get install -y nginx
 RUN rm /etc/nginx/sites-enabled/*
-ADD nginx.conf /etc/nginx/sites-enabled
+COPY nginx-site.conf /etc/nginx/sites-enabled
+COPY nginx.conf /etc/nginx/nginx.conf
 COPY nginx-supervisor.conf /etc/supervisor/conf.d/nginx.conf
 
 COPY loaddata.sh /site

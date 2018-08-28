@@ -27,6 +27,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "9999:9999"
     environment:
       - DJANGO_SECRET_KEY
       - MYSQL_DMOJ_PASSWORD
@@ -35,7 +36,7 @@ services:
       - mysql
   judge:
     build: judge
-    command: "site judge1 password"
+    command: "-s pcs.ucc.asn.au judge1 ${JUDGE_PASSWORD}"
     privileged: true
     volumes:
       - type: bind
