@@ -7,5 +7,9 @@ if [ ! -d "/etc/letsencrypt/live/pcs.org.au/" ]; then
   certbot certonly --agree-tos -d pcs.org.au -m uwapcs@gmail.com --authenticator standalone
 fi
 
+if [ ! -d "/etc/letsencrypt/live/pcs.ucc.asn.au/" ]; then
+  certbot certonly --agree-tos -d pcs.ucc.asn.au -m uwapcs@gmail.com --authenticator standalone
+fi
+
 certbot renew
 /usr/bin/supervisord -n
