@@ -15,7 +15,7 @@ spec:
         app: site
     spec:
       containers:
-        - image: asia.gcr.io/uwapcs-208404/site
+        - image: uwapcs/dmoj-site
           name: site
           ports:
             - containerPort: 80
@@ -27,12 +27,24 @@ spec:
           volumeMounts:
             - name: problems-persistent-storage
               mountPath: /problems
+            - name: site-ssl-persistent-storage
+              mountPath: /etc/letsencrypt
           env:
             - name: DJANGO_SECRET_KEY
               valueFrom:
                 secretKeyRef:
                   name: site
-                  key: djangoSecretKey
+                  key: django-secret
+            - name: DMOJ_EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: site
+                  key: email-password
+            - name: MYSQL_DMOJ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: dmoj-password
           lifecycle:
             postStart:
               exec:
@@ -45,3 +57,6 @@ spec:
         - name: problems-persistent-storage
           persistentVolumeClaim:
             claimName: problems
+        - name: site-ssl-persistent-storage
+          persistentVolumeClaim:
+            claimName: site-ssl-volumeclaim

@@ -18,6 +18,13 @@ spec:
         - image: mysql:5.6
           name: mysql
           env:
+            - name: MYSQL_USER
+              value: dmoj
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: dmoj-password
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:

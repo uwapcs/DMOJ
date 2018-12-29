@@ -15,22 +15,32 @@ spec:
         app: judge
     spec:
       containers:
-        - image: asia.gcr.io/uwapcs-208404/judge
+        - image: uwapcs/dmoj-judge
           name: judge
-          args: ["site", "judge1", "password"]
+          args: ["site"]
           env:
           - name: PYTHON_EGG_CACHE
             value: "/tmp/python-eggs"
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
           volumeMounts:
             - name: problems-persistent-storage
               mountPath: /problems
               readOnly: true
+            - name: secret-volume
+              readOnly: true
+              mountPath: "/etc/secret-volume"
           securityContext:
             privileged: true
       volumes:
         - name: problems-persistent-storage
           persistentVolumeClaim:
             claimName: problems
+        - name: secret-volume
+          secret:
+            secretName: judge
 
 ---
 apiVersion: autoscaling/v1

@@ -19,7 +19,7 @@ DEBUG = False  # Change to False once you are done with runserver testing.
 
 # Uncomment and set to the domain names this site is intended to serve.
 # You must do this once you set DEBUG to False.
-ALLOWED_HOSTS = ['pcs.ucc.asn.au']
+ALLOWED_HOSTS = ['pcs.org.au']
 
 # Optional apps that DMOJ can make use of.
 INSTALLED_APPS += (
@@ -115,7 +115,7 @@ ADMINS = (
 )
 
 # The sender for the aforementioned emails.
-SERVER_EMAIL = 'UWA PCS Online Judge <noreply@pcs.ucc.asn.au>'
+SERVER_EMAIL = 'UWA PCS Online Judge <noreply@pcs.org.au>'
 
 
 ##################################################
