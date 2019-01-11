@@ -6,6 +6,7 @@ metadata:
     app: judge
 spec:
   serviceName: 'judge'
+  podManagementPolicy: Parallel
   selector:
     matchLabels:
       app: judge
@@ -34,6 +35,10 @@ spec:
               mountPath: "/etc/secret-volume"
           securityContext:
             privileged: true
+          resources:
+            requests:
+              memory: "1.5Gi"
+              cpu: "1.0"
       volumes:
         - name: problems-persistent-storage
           persistentVolumeClaim:
@@ -48,8 +53,8 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: judge-hpa
 spec:
-  maxReplicas: 2
-  minReplicas: 2
+  maxReplicas: 5
+  minReplicas: 1
   scaleTargetRef:
     apiVersion: apps/v1
     kind: StatefulSet

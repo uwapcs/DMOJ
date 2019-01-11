@@ -45,6 +45,9 @@ spec:
                 secretKeyRef:
                   name: mysql
                   key: dmoj-password
+          resources:
+            requests:
+              cpu: 0.1
           lifecycle:
             postStart:
               exec:
